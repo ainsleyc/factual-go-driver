@@ -1,2 +1,2 @@
 # factual-go-driver
-Go driver for Factual Api
+Go driver for Factual API
