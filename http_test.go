@@ -4,18 +4,23 @@ import (
   "testing"
 )
 
-const validPath = "/t/place-categories"
 const invalidPath = "http://blah.com/places"
+const validPath = "/t/place-categories"
+
+const fakeKey = "blah"
+const fakeSecret = "blah"
 
 func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
-  _, err := Get(invalidPath)
+  client := NewClient(fakeKey, fakeSecret)
+  _, err := client.Get(invalidPath)
   if err == nil {
     t.Error("Did not return error for invalid path")
   }
 }
 
 func TestGet_HttpError_ShouldReturnError(t *testing.T) {
-  _, err := Get("/t/place-categories")
+  client := NewClient(fakeKey, fakeSecret)
+  _, err := client.Get(validPath)
   if err == nil {
     t.Error("Did not return error for http error code")
   }

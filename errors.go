@@ -7,7 +7,7 @@ import (
   "encoding/json"
 )
 
-type errorJson struct {
+type errorResp struct {
   Message string `json:"message"`
 }
 
@@ -22,7 +22,7 @@ func ErrHttpBody(url string) error {
 }
 
 func ErrHttpResponse(url string, code int, resp []byte) error {
-  e := errorJson{}
+  e := errorResp{}
   json.Unmarshal(resp, &e)
   m := url + " (" + strconv.Itoa(code) + "): " + e.Message
   fmt.Println(m)

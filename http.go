@@ -5,11 +5,12 @@ import (
   "net/http"
 
   "github.com/asaskevich/govalidator"
+  // "github.com/garyburd/go-oauth/oauth"
 )
 
-const baseUrl = "http://api.factual.com"
+// const baseUrl = "http://api.factual.com"
 
-func Get(path string) ([]byte, error) {
+func (c Client) Get(path string) ([]byte, error) {
 
   fullUrl := baseUrl + path 
   if !govalidator.IsURL(fullUrl) {
