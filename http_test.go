@@ -10,7 +10,6 @@ const invalidPath = "http://blah.com/places"
 
 func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
   _, err := Get(invalidPath)
-  fmt.Println("ERROR:", err)
   if err == nil {
     t.Error("Did not return error for invalid path")
   }

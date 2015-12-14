@@ -10,7 +10,7 @@ import (
 const baseUrl = "http://api.factual.com"
 
 func Get(path string) (string, error) {
-  
+
   fullUrl := baseUrl + path 
   if !govalidator.IsURL(fullUrl) {
     return "", ErrInvalidUrl 
