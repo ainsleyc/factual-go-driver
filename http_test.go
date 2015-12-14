@@ -1,7 +1,6 @@
 package factual
 
 import (
-  "fmt"
   "testing"
 )
 
@@ -15,12 +14,12 @@ func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
   }
 }
 
-// func TestGet_ValidUrl(t *testing.T) {
-//   _, err := Get("/t/place-categories")
-//   if err != nil {
-//     t.Error("Get returned error for valid Url")
-//   }
-// }
+func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
+  _, err := Get("/t/place-categories")
+  if err != nil {
+    t.Error("Get returned error for valid url")
+  }
+}
 
 // func TestPost(t *testing.T) {
 //   r, err := Post("BLAH")
