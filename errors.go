@@ -1,9 +1,11 @@
 package factual
 
-import "errors"
-
-func TestFunc() {}
-
-var (
-  ErrInvalidUrl = errors.New("url is invalid")
+import (
+  "errors"
 )
+
+func ErrInvalidUrl(url string) error {
+  url += " is an invalid url"
+  return errors.New(url)
+}
+

@@ -13,7 +13,7 @@ func Get(path string) (string, error) {
 
   fullUrl := baseUrl + path 
   if !govalidator.IsURL(fullUrl) {
-    return "", ErrInvalidUrl 
+    return "", ErrInvalidUrl(fullUrl)
   }
 
   resp, err := http.Get(fullUrl)

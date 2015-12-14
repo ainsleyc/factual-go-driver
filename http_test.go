@@ -21,6 +21,3 @@ func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
   }
 }
 
-// func TestPost(t *testing.T) {
-//   r, err := Post("BLAH")
-// }
