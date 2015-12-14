@@ -1,7 +1,6 @@
 package factual
 
 import (
-  "fmt"
   "net/http"
 
   "github.com/asaskevich/govalidator"
@@ -22,7 +21,9 @@ func Get(path string) (string, error) {
   }
   defer resp.Body.Close()
 
-  fmt.Println("RESP:", resp.Body)
+  if resp.StatusCode != 200 {
+    return "", ErrHttpResponse(fullUrl, resp.StatusCode, "BLAH")
+  }
 
   return "BLAH", nil 
 }
