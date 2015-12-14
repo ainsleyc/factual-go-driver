@@ -3,18 +3,29 @@ package factual
 import (
   "fmt"
   "strconv"
-  "strings"
   "errors"
+  "encoding/json"
 )
+
+type errorJson struct {
+  Message string `json:"message"`
+}
 
 func ErrInvalidUrl(url string) error {
   url += ": invalid url"
   return errors.New(url)
 }
 
-func ErrHttpResponse(url string, code int, message string) error {
-  m := []string{url, " (", strconv.Itoa(code), "): ", message}
-  fmt.Println(strings.Join(m, ""))
-  return errors.New(strings.Join(m, ""))
+func ErrHttpBody(url string) error {
+  url += ": response body was malformed"
+  return errors.New(url)
+}
+
+func ErrHttpResponse(url string, code int, resp []byte) error {
+  e := errorJson{}
+  json.Unmarshal(resp, &e)
+  m := url + " (" + strconv.Itoa(code) + "): " + e.Message
+  fmt.Println(m)
+  return errors.New(m)
 }
 
