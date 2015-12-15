@@ -3,34 +3,23 @@ package factual
 import (
   "io/ioutil"
   "net/http"
-  // "net/url"
-  // "strings"
+  "net/url"
 
   "github.com/asaskevich/govalidator"
-  // "github.com/garyburd/go-oauth/oauth"
 )
 
-func (c Client) Get(path string) ([]byte, error) {
+func (c Client) Get(path string, params url.Values) ([]byte, error) {
 
   fullUrl := c.BaseUri + path 
   if !govalidator.IsURL(fullUrl) {
     return nil, ErrInvalidUrl(fullUrl)
   }
 
-  // form := url.Values{}
-  // req, err := http.NewRequest("GET", fullUrl, strings.NewReader(form.Encode()))
-  // if err != nil {
-  //   return nil, err
-  // }
-
-  // resp, err := http.DefaultClient.Do(req)
-  // if err != nil {
-  //   return nil, err
-  // }
-  // defer resp.Body.Close()
-
-  // resp, err := c.Oauth.Get(http.DefaultClient, &c.Creds, fullUrl, form)
-  resp, err := c.Oauth.Get(http.DefaultClient, nil, fullUrl, nil)
+  resp, err := c.Oauth.Get(http.DefaultClient, nil, fullUrl, params)
+  if err != nil {
+    return nil, err
+  }
+  defer resp.Body.Close()
 
   body, err := ioutil.ReadAll(resp.Body)
   if err != nil {
@@ -44,6 +33,6 @@ func (c Client) Get(path string) ([]byte, error) {
   return body, nil 
 }
 
-func Post(url string) (string, error) {
+func (c Client) Post(url string) (string, error) {
   return "POST", nil
 }
