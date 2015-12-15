@@ -1,7 +1,6 @@
 package factual
 
 import (
-  "fmt"
   "strconv"
   "errors"
   "encoding/json"
@@ -25,7 +24,6 @@ func ErrHttpResponse(url string, code int, resp []byte) error {
   e := errorResp{}
   json.Unmarshal(resp, &e)
   m := url + " (" + strconv.Itoa(code) + "): " + e.Message
-  fmt.Println(m)
   return errors.New(m)
 }
 

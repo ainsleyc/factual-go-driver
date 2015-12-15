@@ -11,6 +11,9 @@ import (
   "github.com/ainsleyc/factual"
 )
 
+const testValidPath = "/t/place-categories"
+var testEmptyParams = url.Values{} 
+
 type testConfig struct {
   Key string 
   Secret string
@@ -56,12 +59,18 @@ func TestGet_ConfigFile_ShouldHaveRequiredFields(t *testing.T) {
   }
 }
 
+func TestGet_InvalidCredentials_ShouldReturnError(t *testing.T) {
+  client := factual.NewClient("blah", "blah")
+  _, err := client.Get(testValidPath, testEmptyParams)
+  if err == nil {
+    t.Error("Did not return error for invalid credentials")
+  }
+}
+
 func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
-  path := "/t/place-categories"
   config, _:= getTestConfig()
-  params := url.Values{}
   client := factual.NewClient(config.Key, config.Secret) 
-  _, err := client.Get(path, params)
+  _, err := client.Get(testValidPath, testEmptyParams)
   if err != nil {
     t.Error("Get returned error for valid url, Factual API may be unavailable")
   }
