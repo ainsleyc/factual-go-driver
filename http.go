@@ -3,25 +3,34 @@ package factual
 import (
   "io/ioutil"
   "net/http"
+  // "net/url"
+  // "strings"
 
   "github.com/asaskevich/govalidator"
   // "github.com/garyburd/go-oauth/oauth"
 )
 
-// const baseUrl = "http://api.factual.com"
-
 func (c Client) Get(path string) ([]byte, error) {
 
-  fullUrl := baseUrl + path 
+  fullUrl := c.BaseUri + path 
   if !govalidator.IsURL(fullUrl) {
     return nil, ErrInvalidUrl(fullUrl)
   }
 
-  resp, err := http.Get(fullUrl)
-  if err != nil {
-    return nil, err
-  }
-  defer resp.Body.Close()
+  // form := url.Values{}
+  // req, err := http.NewRequest("GET", fullUrl, strings.NewReader(form.Encode()))
+  // if err != nil {
+  //   return nil, err
+  // }
+
+  // resp, err := http.DefaultClient.Do(req)
+  // if err != nil {
+  //   return nil, err
+  // }
+  // defer resp.Body.Close()
+
+  // resp, err := c.Oauth.Get(http.DefaultClient, &c.Creds, fullUrl, form)
+  resp, err := c.Oauth.Get(http.DefaultClient, nil, fullUrl, nil)
 
   body, err := ioutil.ReadAll(resp.Body)
   if err != nil {

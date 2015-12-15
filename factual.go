@@ -1,14 +1,23 @@
 package factual
 
+import (
+  // "net/http"
+  "github.com/garyburd/go-oauth/oauth"
+)
+
 type Client struct {
-  key string
-  secret string
-  baseUri string
+  Oauth oauth.Client
+  BaseUri string
 }
 
-const baseUrl = "http://api.factual.com"
+const defaultUri = "http://api.v3.factual.com"
 
 func NewClient(key string, secret string) Client {
-  return Client{key, secret, baseUrl} 
+  creds := oauth.Credentials{key, secret}
+  oauthClient := oauth.Client{
+    Credentials: creds,
+    SignatureMethod: oauth.HMACSHA1,
+  }
+  return Client{oauthClient, defaultUri} 
 }
 
