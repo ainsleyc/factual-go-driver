@@ -18,4 +18,3 @@ func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
     t.Error("Did not return error for invalid path")
   }
 }
-
