@@ -3,19 +3,53 @@
 package factual_test
 
 import (
+  "fmt"
   "net/url"
   "testing"
-  // "encoding/json"
+  "os"
+  "encoding/json"
 
   "github.com/ainsleyc/factual"
 )
 
-func getTestConfig() (key string, secret string, err error) {
-  return "", "", nil
+type testConfig struct {
+  Key string 
+  Secret string
+}
+
+func getTestConfig() (conf testConfig, err error) {
+  config := testConfig{}
+  file, err := os.Open("conf.json")
+  if err != nil {
+    return config, err
+  }
+
+  decoder := json.NewDecoder(file)
+  err = decoder.Decode(&config)
+  if err != nil {
+    return config, err
+  }
+
+  return config, nil
 }
 
 func TestGet_ConfigFile_ShouldExist(t *testing.T) {
+  _, err := getTestConfig()
+  if err != nil {
+    switch err.(type) {
+    default:
+      t.Error("conf.json has an unknown error")
+    case *os.PathError:
+      t.Error("conf.json does not exist")
+    case *json.SyntaxError:
+      t.Error("conf.json is not a valid json")
+    }
+  }
+}
 
+func TestGet_ConfigFile_ShouldHaveRequiredFields(t *testing.T) {
+  config, _:= getTestConfig()
+  fmt.Println(config)
 }
 
 func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
@@ -27,13 +61,3 @@ func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
     t.Error("Did not return error for invalid path")
   }
 }
-
-// func TestGet_HttpError_ShouldReturnError(t *testing.T) {
-//   validPath := "/t/place-categories"
-//   client := NewClient(fakeKey, fakeSecret)
-//   _, err := client.Get(validPath)
-//   if err == nil {
-//     t.Error("Did not return error for http error code")
-//   }
-// }
-
