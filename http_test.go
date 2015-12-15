@@ -3,7 +3,6 @@
 package factual_test
 
 import (
-  "fmt"
   "net/url"
   "testing"
   "os"
@@ -49,7 +48,12 @@ func TestGet_ConfigFile_ShouldExist(t *testing.T) {
 
 func TestGet_ConfigFile_ShouldHaveRequiredFields(t *testing.T) {
   config, _:= getTestConfig()
-  fmt.Println(config)
+  if config.Key == "" {
+    t.Error("conf.json is missing Key")
+  }
+  if config.Secret == "" {
+    t.Error("conf.json is missing Secret")
+  }
 }
 
 func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
