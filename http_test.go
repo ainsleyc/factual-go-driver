@@ -1,3 +1,5 @@
+// +build unit
+
 package factual
 
 import (
@@ -25,12 +27,4 @@ func TestGet_InvalidUrl_ShouldReturnError(t *testing.T) {
 //     t.Error("Did not return error for http error code")
 //   }
 // }
-
-func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
-  client := NewClient(fakeKey, fakeSecret)
-  _, err := client.Get(validPath)
-  if err != nil {
-    t.Error("Get returned error for valid url")
-  }
-}
 
