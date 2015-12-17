@@ -4,47 +4,47 @@ import (
   "github.com/bitly/go-simplejson"
 )
 
-type LogicalOperator string
+type logicalOperator string
 
 const (
-  And LogicalOperator = "$and"
-  Or LogicalOperator = "$or"
+  And logicalOperator = "$and"
+  Or logicalOperator = "$or"
 )
 
-type ComparisonOperator string
+type comparisonOperator string
 
 const (
-  Blank ComparisonOperator = "$blank" 
-  Bw ComparisonOperator = "$bw" 
-  Bwin ComparisonOperator = "$bwin" 
-  Eq ComparisonOperator = "$eq" 
-  Excludes ComparisonOperator = "$excludes" 
-  ExcludesAny ComparisonOperator = "$excludes_any" 
-  Gt ComparisonOperator = "$gt" 
-  Gte ComparisonOperator = "$gte" 
-  Includes ComparisonOperator = "$includes" 
-  IncludesAny ComparisonOperator = "$includes_any" 
-  Lt ComparisonOperator = "$lt" 
-  Lte ComparisonOperator = "$lte" 
-  Nbw ComparisonOperator = "$nbw" 
-  Nbwin ComparisonOperator = "$bnwin" 
-  Neq ComparisonOperator = "$neq" 
-  Nin ComparisonOperator = "$nin" 
-  Search ComparisonOperator = "$search" 
+  Blank comparisonOperator = "$blank" 
+  Bw comparisonOperator = "$bw" 
+  Bwin comparisonOperator = "$bwin" 
+  Eq comparisonOperator = "$eq" 
+  Excludes comparisonOperator = "$excludes" 
+  ExcludesAny comparisonOperator = "$excludes_any" 
+  Gt comparisonOperator = "$gt" 
+  Gte comparisonOperator = "$gte" 
+  Includes comparisonOperator = "$includes" 
+  IncludesAny comparisonOperator = "$includes_any" 
+  Lt comparisonOperator = "$lt" 
+  Lte comparisonOperator = "$lte" 
+  Nbw comparisonOperator = "$nbw" 
+  Nbwin comparisonOperator = "$bnwin" 
+  Neq comparisonOperator = "$neq" 
+  Nin comparisonOperator = "$nin" 
+  Search comparisonOperator = "$search" 
 )
 
-type FilterInterface interface {
+type filterInterface interface {
   MarshalJSON() ([]byte, error)
   toJson() (*simplejson.Json, error)
 }
 
 type filter struct {
   Field string
-  Op ComparisonOperator
+  Op comparisonOperator
   Vals interface{}
 }
 
-func NewFilter(field string, op ComparisonOperator, vals interface{}) *filter {
+func NewFilter(field string, op comparisonOperator, vals interface{}) *filter {
   return &filter{field, op, vals}
 }
 
@@ -63,8 +63,8 @@ func (f *filter) MarshalJSON() ([]byte, error) {
 }
 
 // type LogicalFilter struct {
-//   Op LogicalOperator 
-//   Vals []FilterInterface
+//   Op logicalOperator 
+//   Vals []filterInterface
 // }
 
 // func (f *LogicalFilter) toJson() *simplejson.Json {
