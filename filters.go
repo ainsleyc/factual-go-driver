@@ -41,23 +41,19 @@ type FilterInterface interface {
 type Filter struct {
   Field string
   Op ComparisonOperator
-  vals interface{}
+  Vals interface{}
+}
+
+func (f *Filter) ToJson() *simplejson.Json {
+  opJson := simplejson.New()
+  opJson.Set(string(f.Op), f.Vals)
+  json := simplejson.New()
+  json.Set(f.Field, opJson)
+  return json
 }
 
 type LogicalFilter struct {
   Op LogicalOperator 
-  vals []FilterInterface
+  Vals []FilterInterface
 }
 
-func JsonTest() *simplejson.Json {
-  json := simplejson.New()
-  pJson := simplejson.New()
-  values := []string{"1", "2", "3"}
-  ints := []int{1, 2, 3}
-  json.Set("single", "value")
-  json.Set("array", values)
-  json.Set("ints", ints)
-  pJson.Set("parent", json)
-
-  return pJson 
-}
