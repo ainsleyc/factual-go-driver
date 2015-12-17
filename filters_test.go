@@ -9,8 +9,8 @@ import (
   "github.com/ainsleyc/factual"
 )
 
-func TestFilter_ToJson_Should(t *testing.T) {
-  filter := factual.Filter{"name", factual.Eq, "Factual"}
-  bytes, _ := filter.ToJson().EncodePretty()
+func TestFilter_MarshalJson_Should(t *testing.T) {
+  filter := factual.NewFilter("name", factual.Eq, "Factual")
+  bytes, _ := filter.MarshalJSON()
   fmt.Println(string(bytes))
 }

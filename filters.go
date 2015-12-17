@@ -34,17 +34,21 @@ const (
 )
 
 type FilterInterface interface {
-  ToJson() (*simplejson.Json, error)
   MarshalJSON() ([]byte, error)
+  toJson() (*simplejson.Json, error)
 }
 
-type Filter struct {
+type filter struct {
   Field string
   Op ComparisonOperator
   Vals interface{}
 }
 
-func (f *Filter) ToJson() *simplejson.Json {
+func NewFilter(field string, op ComparisonOperator, vals interface{}) *filter {
+  return &filter{field, op, vals}
+}
+
+func (f *filter) toJson() *simplejson.Json {
   opJson := simplejson.New()
   opJson.Set(string(f.Op), f.Vals)
   json := simplejson.New()
@@ -52,8 +56,25 @@ func (f *Filter) ToJson() *simplejson.Json {
   return json
 }
 
-type LogicalFilter struct {
-  Op LogicalOperator 
-  Vals []FilterInterface
+func (f *filter) MarshalJSON() ([]byte, error) {
+  filter := f.toJson()
+  bytes, err := filter.MarshalJSON()
+  return bytes, err 
 }
 
+// type LogicalFilter struct {
+//   Op LogicalOperator 
+//   Vals []FilterInterface
+// }
+
+// func (f *LogicalFilter) toJson() *simplejson.Json {
+//   json := simplejson.New()
+//   json.Set(string(f.Op), "blah")
+//   return json
+// }
+
+// func (f *Filter) MarshalJSON() ([]byte, error) {
+//   filter := f.toJson()
+//   bytes, err := filter.MarshalJSON()
+//   return bytes, err 
+// }
