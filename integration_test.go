@@ -76,3 +76,21 @@ func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
   }
 }
 
+func TestRead_ValidFields_ShouldReturnData(t *testing.T) {
+  config, _:= getTestConfig()
+  client := factual.NewClient(config.Key, config.Secret) 
+  opts := factual.ReadOpts{
+    "places-us", 
+    factual.NewFilter(
+      "name", 
+      factual.Eq, 
+      "Factual", 
+    ),
+  }
+  resp, err := client.Read(opts)
+  if err != nil {
+    t.Error("Read returned error for valid parameters, Factual API may be unavailable")
+  }
+  t.Error("TBD", resp)
+}
+
