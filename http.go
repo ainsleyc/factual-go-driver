@@ -33,6 +33,6 @@ func (c Client) Get(path string, params url.Values) ([]byte, error) {
   return body, nil 
 }
 
-// func (c Client) Post(url string) (string, error) {
-//   return "POST", nil
-// }
+func (c Client) Post(url string) (string, error) {
+  return "POST", nil
+}
