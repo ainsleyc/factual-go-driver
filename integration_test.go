@@ -36,6 +36,20 @@ func getTestConfig() (conf testConfig, err error) {
   return config, nil
 }
 
+func checkGetErr(t *testing.T, err error) {
+  if err != nil {
+    t.Error("Get returned error for valid url, Factual API may be unavailable")
+  }
+}
+
+func checkRespHasData(t *testing.T, resp []byte) {
+  json, _ := simplejson.NewJson(resp)
+  data := json.Get("response").Get("data")
+  if len(data.MustArray()) <= 0 {
+    t.Error("Valid Get query returned no results")
+  }
+}
+
 func TestGet_ConfigFile_ShouldExist(t *testing.T) {
   _, err := getTestConfig()
   if err != nil {
@@ -72,41 +86,37 @@ func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
   config, _:= getTestConfig()
   client := factual.NewClient(config.Key, config.Secret) 
   _, err := client.Get(testValidPath, testEmptyParams)
-  if err != nil {
-    t.Error("Get returned error for valid url, Factual API may be unavailable")
-  }
+  checkGetErr(t, err)
 }
 
-func TestGet_Read_ShouldReturnResults(t *testing.T) {
+func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
   config, _:= getTestConfig()
   client := factual.NewClient(config.Key, config.Secret) 
 
-  tests := []struct {
-    path string
-    params map[string]string
-  }{
-    {
-      "/t/places-us", 
-      map[string]string{
-        "q": "starbucks",
-      },
-    },
-  }
+  path := "/t/places-us" 
+  params := url.Values{}
+  params.Set("q", "starbucks")
 
-  for _, test := range tests {
-    params := url.Values{}
-    for key, value := range test.params {
-      params.Set(key, value)
-    }
-    resp, err := client.Get(test.path, params)
-    if err != nil {
-      t.Error("Read returned error for valid parameters, Factual API may be unavailable")
-    }
-    json, _ := simplejson.NewJson(resp)
-    data := json.Get("response").Get("data")
-    if len(data.MustArray()) <= 0 {
-      t.Error("Query '" + test.path + "?" + params.Encode() + "' returned no results")
-    }
-  }
+  resp, err := client.Get(path, params)
+  checkGetErr(t, err)
+  checkRespHasData(t, resp)
+}
+
+func TestGet_ReadWithSingleFilter_ShouldReturnResults(t *testing.T) {
+  config, _:= getTestConfig()
+  client := factual.NewClient(config.Key, config.Secret) 
+
+  path := "/t/places-us" 
+  params := url.Values{}
+  filters, _ := factual.NewFilter(
+    "name",
+    factual.Eq,
+    "starbucks",
+  ).MarshalJSON()
+  params.Set("filters", string(filters))
+
+  resp, err := client.Get(path, params)
+  checkGetErr(t, err)
+  checkRespHasData(t, resp)
 }
 
