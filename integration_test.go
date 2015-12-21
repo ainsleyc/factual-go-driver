@@ -36,13 +36,15 @@ func getTestConfig() (conf testConfig, err error) {
   return config, nil
 }
 
-func checkGetErr(t *testing.T, err error) {
+func testGet(t *testing.T, path string, params url.Values) {
+  config, _:= getTestConfig()
+  client := factual.NewClient(config.Key, config.Secret) 
+
+  resp, err := client.Get(path, params)
   if err != nil {
     t.Error("Get returned error for valid url, Factual API may be unavailable")
   }
-}
 
-func checkRespHasData(t *testing.T, resp []byte) {
   json, _ := simplejson.NewJson(resp)
   data := json.Get("response").Get("data")
   if len(data.MustArray()) <= 0 {
@@ -82,30 +84,15 @@ func TestGet_InvalidCredentials_ShouldReturnError(t *testing.T) {
   }
 }
 
-func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
-  config, _:= getTestConfig()
-  client := factual.NewClient(config.Key, config.Secret) 
-  _, err := client.Get(testValidPath, testEmptyParams)
-  checkGetErr(t, err)
-}
-
 func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
-  config, _:= getTestConfig()
-  client := factual.NewClient(config.Key, config.Secret) 
-
   path := "/t/places-us" 
   params := url.Values{}
   params.Set("q", "starbucks")
 
-  resp, err := client.Get(path, params)
-  checkGetErr(t, err)
-  checkRespHasData(t, resp)
+  testGet(t, path, params)
 }
 
 func TestGet_ReadWithSingleFilter_ShouldReturnResults(t *testing.T) {
-  config, _:= getTestConfig()
-  client := factual.NewClient(config.Key, config.Secret) 
-
   path := "/t/places-us" 
   params := url.Values{}
   filters, _ := factual.NewFilter(
@@ -115,8 +102,6 @@ func TestGet_ReadWithSingleFilter_ShouldReturnResults(t *testing.T) {
   ).MarshalJSON()
   params.Set("filters", string(filters))
 
-  resp, err := client.Get(path, params)
-  checkGetErr(t, err)
-  checkRespHasData(t, resp)
+  testGet(t, path, params)
 }
 
