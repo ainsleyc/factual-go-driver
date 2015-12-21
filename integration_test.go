@@ -52,8 +52,9 @@ func testGet(t *testing.T, path string, params url.Values) {
   }
 }
 
-func TestGet_ConfigFile_ShouldExist(t *testing.T) {
-  _, err := getTestConfig()
+// Test existence of valid config.json file
+func TestGet_ConfigFile_ShouldExistAndBeValid(t *testing.T) {
+  config, err := getTestConfig()
   if err != nil {
     switch err.(type) {
     default:
@@ -64,23 +65,11 @@ func TestGet_ConfigFile_ShouldExist(t *testing.T) {
       t.Error("conf.json is not a valid json")
     }
   }
-}
-
-func TestGet_ConfigFile_ShouldHaveRequiredFields(t *testing.T) {
-  config, _:= getTestConfig()
   if config.Key == "" {
     t.Error("conf.json is missing Key")
   }
   if config.Secret == "" {
     t.Error("conf.json is missing Secret")
-  }
-}
-
-func TestGet_InvalidCredentials_ShouldReturnError(t *testing.T) {
-  client := factual.NewClient("blah", "blah")
-  _, err := client.Get(testValidPath, testEmptyParams)
-  if err == nil {
-    t.Error("Did not return error for invalid credentials")
   }
 }
 
