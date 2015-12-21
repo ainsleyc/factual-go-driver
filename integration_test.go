@@ -80,16 +80,33 @@ func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
 func TestGet_Read_ShouldReturnResults(t *testing.T) {
   config, _:= getTestConfig()
   client := factual.NewClient(config.Key, config.Secret) 
-  path := "/t/places-us"
-  params := url.Values{}
-  params.Set("q", "starbucks")
-  resp, err := client.Get(path, params)
-  if err != nil {
-    t.Error("Read returned error for valid parameters, Factual API may be unavailable")
+
+  tests := []struct {
+    path string
+    params map[string]string
+  }{
+    {
+      "/t/places-us", 
+      map[string]string{
+        "q": "starbucks",
+      },
+    },
   }
-  json, _ := simplejson.NewJson(resp)
-  data := json.Get("response").Get("data")
-  rows := json.Get("response").Get("included_rows")
-  t.Error("TBD", data, rows) 
+
+  for _, test := range tests {
+    params := url.Values{}
+    for key, value := range test.params {
+      params.Set(key, value)
+    }
+    resp, err := client.Get(test.path, params)
+    if err != nil {
+      t.Error("Read returned error for valid parameters, Factual API may be unavailable")
+    }
+    json, _ := simplejson.NewJson(resp)
+    data := json.Get("response").Get("data")
+    if len(data.MustArray()) <= 0 {
+      t.Error("Query '" + test.path + "?" + params.Encode() + "' returned no results")
+    }
+  }
 }
 
