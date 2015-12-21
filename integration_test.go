@@ -84,6 +84,7 @@ func TestGet_InvalidCredentials_ShouldReturnError(t *testing.T) {
   }
 }
 
+// /t/places-us?q=starbucks
 func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
   path := "/t/places-us" 
   params := url.Values{}
@@ -92,6 +93,7 @@ func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
   testGet(t, path, params)
 }
 
+// /t/places-us?filters={"name":{"$eq":"starbucks"}}
 func TestGet_ReadWithSingleFilter_ShouldReturnResults(t *testing.T) {
   path := "/t/places-us" 
   params := url.Values{}
