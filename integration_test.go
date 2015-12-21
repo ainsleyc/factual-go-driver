@@ -9,6 +9,7 @@ import (
   "net/url"
 
   "github.com/ainsleyc/factual"
+  "github.com/bitly/go-simplejson"
 )
 
 const testValidPath = "/t/place-categories"
@@ -76,21 +77,19 @@ func TestGet_ValidUrl_ShouldNotReturnError(t *testing.T) {
   }
 }
 
-func TestRead_ValidFields_ShouldReturnData(t *testing.T) {
+func TestGet_Read_ShouldReturnResults(t *testing.T) {
   config, _:= getTestConfig()
   client := factual.NewClient(config.Key, config.Secret) 
-  opts := factual.ReadOpts{
-    "places-us", 
-    factual.NewFilter(
-      "name", 
-      factual.Eq, 
-      "Factual", 
-    ),
-  }
-  resp, err := client.Read(opts)
+  path := "/t/places-us"
+  params := url.Values{}
+  params.Set("q", "starbucks")
+  resp, err := client.Get(path, params)
   if err != nil {
     t.Error("Read returned error for valid parameters, Factual API may be unavailable")
   }
-  t.Error("TBD", resp)
+  json, _ := simplejson.NewJson(resp)
+  data := json.Get("response").Get("data")
+  rows := json.Get("response").Get("included_rows")
+  t.Error("TBD", data, rows) 
 }
 
