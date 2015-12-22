@@ -96,3 +96,25 @@ func TestGet_ReadWithSingleFilter_ShouldReturnResults(t *testing.T) {
   testGet(t, path, params)
 }
 
+// /t/places-us?filters={"$and":[{"name":"starbucks"},{"locality":"los angeles"}]}
+func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
+  path := "/t/places-us" 
+  params := url.Values{}
+  filter1, _ := factual.NewFilter(
+    "name",
+    factual.Eq,
+    "starbucks",
+  )
+  filter2, _ := factual.NewFilter(
+    "locality",
+    factual.Eq,
+    "los angeles",
+  )
+  andFilter, _ := factual.NewLogicalFilter(
+    factual.And,
+    []factual.Filter{filter1, filter2},
+  ).MarshalJSON()
+  params.Set("filters", string(andFilter))
+
+  testGet(t, path, params)
+}

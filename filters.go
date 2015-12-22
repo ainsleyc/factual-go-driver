@@ -62,19 +62,25 @@ func (f *Filter) MarshalJSON() ([]byte, error) {
   return bytes, err 
 }
 
-// type LogicalFilter struct {
-//   Op LogicalOperator 
-//   Vals []filterInterface
-// }
+type LogicalFilter struct {
+  Op LogicalOperator 
+  Vals []filterInterface
+}
 
-// func (f *LogicalFilter) toJson() *simplejson.Json {
-//   json := simplejson.New()
-//   json.Set(string(f.Op), "blah")
-//   return json
-// }
+func NewLogicalFilter(op LogicalOperator, vals []filterInterface) *LogicalFilter {
+  return &LogicalFilter{op, vals}
+}
 
-// func (f *Filter) MarshalJSON() ([]byte, error) {
-//   filter := f.toJson()
-//   bytes, err := filter.MarshalJSON()
-//   return bytes, err 
-// }
+func (f *LogicalFilter) toJson() *simplejson.Json {
+  // json := simplejson.New()
+  // json.Set(string(f.Op), "blah")
+  // return json
+  return nil
+}
+
+func (f *LogicalFilter) MarshalJSON() ([]byte, error) {
+  // filter := f.toJson()
+  // bytes, err := filter.MarshalJSON()
+  // return bytes, err 
+  return nil, nil
+}
