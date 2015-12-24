@@ -64,10 +64,10 @@ func (f *Filter) MarshalJSON() ([]byte, error) {
 
 type LogicalFilter struct {
   Op LogicalOperator 
-  Vals []filterInterface
+  Vals *[]filterInterface
 }
 
-func NewLogicalFilter(op LogicalOperator, vals []filterInterface) *LogicalFilter {
+func NewLogicalFilter(op LogicalOperator, vals *[]filterInterface) *LogicalFilter {
   return &LogicalFilter{op, vals}
 }
 
