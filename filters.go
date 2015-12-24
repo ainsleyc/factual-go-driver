@@ -33,9 +33,9 @@ const (
   Search ComparisonOperator = "$search" 
 )
 
-type filterInterface interface {
+type FilterInterface interface {
   MarshalJSON() ([]byte, error)
-  toJson() (*simplejson.Json, error)
+  toJson() *simplejson.Json
 }
 
 type Filter struct {
@@ -64,10 +64,10 @@ func (f *Filter) MarshalJSON() ([]byte, error) {
 
 type LogicalFilter struct {
   Op LogicalOperator 
-  Vals *[]filterInterface
+  Vals []FilterInterface
 }
 
-func NewLogicalFilter(op LogicalOperator, vals *[]filterInterface) *LogicalFilter {
+func NewLogicalFilter(op LogicalOperator, vals []FilterInterface) *LogicalFilter {
   return &LogicalFilter{op, vals}
 }
 

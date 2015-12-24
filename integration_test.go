@@ -112,9 +112,9 @@ func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
   )
   andFilter, _ := factual.NewLogicalFilter(
     factual.And,
-    &[]factual.Filter{*filter1, *filter2},
+    []factual.FilterInterface{filter1, filter2},
   ).MarshalJSON()
-  // params.Set("filters", string(andFilter))
+  params.Set("filters", string(andFilter))
 
-  // testGet(t, path, params)
+  testGet(t, path, params)
 }
