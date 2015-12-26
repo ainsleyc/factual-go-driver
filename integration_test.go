@@ -108,7 +108,7 @@ func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
   filter2 := factual.NewComparisonFilter(
     "locality",
     factual.Eq,
-    "los angeles",
+    "new york",
   )
   andFilter, _ := factual.NewLogicalFilter(
     factual.And,
