@@ -96,7 +96,7 @@ func TestGet_ReadWithSingleComparisonFilter_ShouldReturnResults(t *testing.T) {
   testGet(t, path, params)
 }
 
-// /t/places-us?filters={"$and":[{"name":"starbucks"},{"locality":"los angeles"}]}
+// /t/places-us?filters={"$and":[{"name":"starbucks"},{"locality":"new york"}]}
 func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
   path := "/t/places-us" 
   params := url.Values{}
