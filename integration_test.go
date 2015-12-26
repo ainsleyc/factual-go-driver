@@ -83,10 +83,10 @@ func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
 }
 
 // /t/places-us?filters={"name":{"$eq":"starbucks"}}
-func TestGet_ReadWithSingleFilter_ShouldReturnResults(t *testing.T) {
+func TestGet_ReadWithSingleComparisonFilter_ShouldReturnResults(t *testing.T) {
   path := "/t/places-us" 
   params := url.Values{}
-  filters, _ := factual.NewFilter(
+  filters, _ := factual.NewComparisonFilter(
     "name",
     factual.Eq,
     "starbucks",
@@ -100,19 +100,19 @@ func TestGet_ReadWithSingleFilter_ShouldReturnResults(t *testing.T) {
 func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
   path := "/t/places-us" 
   params := url.Values{}
-  filter1 := factual.NewFilter(
+  filter1 := factual.NewComparisonFilter(
     "name",
     factual.Eq,
     "starbucks",
   )
-  filter2 := factual.NewFilter(
+  filter2 := factual.NewComparisonFilter(
     "locality",
     factual.Eq,
     "los angeles",
   )
   andFilter, _ := factual.NewLogicalFilter(
     factual.And,
-    []factual.FilterInterface{filter1, filter2},
+    []factual.Filter{filter1, filter2},
   ).MarshalJSON()
   params.Set("filters", string(andFilter))
 

@@ -8,7 +8,7 @@ import (
   "github.com/ainsleyc/factual"
 )
 
-func TestFilter_MarshalJson_Should(t *testing.T) {
+func TestComparisonFilter_MarshalJson_Should(t *testing.T) {
   tests := []struct {
     field string
     op factual.ComparisonOperator
@@ -19,7 +19,7 @@ func TestFilter_MarshalJson_Should(t *testing.T) {
   }
 
   for _, test := range tests {
-    filter := factual.NewFilter(test.field, test.op, test.vals)
+    filter := factual.NewComparisonFilter(test.field, test.op, test.vals)
     bytes, _ := filter.MarshalJSON()
     if string(bytes) != test.expected {
       t.Error(string(bytes), "!=", test.expected)

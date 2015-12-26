@@ -33,22 +33,22 @@ const (
   Search ComparisonOperator = "$search" 
 )
 
-type FilterInterface interface {
+type Filter interface {
   MarshalJSON() ([]byte, error)
   toJson() *simplejson.Json
 }
 
-type Filter struct {
+type ComparisonFilter struct {
   Field string
   Op ComparisonOperator
   Vals interface{}
 }
 
-func NewFilter(field string, op ComparisonOperator, vals interface{}) *Filter {
-  return &Filter{field, op, vals}
+func NewComparisonFilter(field string, op ComparisonOperator, vals interface{}) *ComparisonFilter {
+  return &ComparisonFilter{field, op, vals}
 }
 
-func (f *Filter) toJson() *simplejson.Json {
+func (f *ComparisonFilter) toJson() *simplejson.Json {
   opJson := simplejson.New()
   opJson.Set(string(f.Op), f.Vals)
   json := simplejson.New()
@@ -56,7 +56,7 @@ func (f *Filter) toJson() *simplejson.Json {
   return json
 }
 
-func (f *Filter) MarshalJSON() ([]byte, error) {
+func (f *ComparisonFilter) MarshalJSON() ([]byte, error) {
   filter := f.toJson()
   bytes, err := filter.MarshalJSON()
   return bytes, err 
@@ -64,10 +64,10 @@ func (f *Filter) MarshalJSON() ([]byte, error) {
 
 type LogicalFilter struct {
   Op LogicalOperator 
-  Vals []FilterInterface
+  Vals []Filter
 }
 
-func NewLogicalFilter(op LogicalOperator, vals []FilterInterface) *LogicalFilter {
+func NewLogicalFilter(op LogicalOperator, vals []Filter) *LogicalFilter {
   return &LogicalFilter{op, vals}
 }
 
