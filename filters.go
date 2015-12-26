@@ -72,15 +72,13 @@ func NewLogicalFilter(op LogicalOperator, vals []Filter) *LogicalFilter {
 }
 
 func (f *LogicalFilter) toJson() *simplejson.Json {
-  // json := simplejson.New()
-  // json.Set(string(f.Op), "blah")
-  // return json
-  return nil
+  json := simplejson.New()
+  json.Set(string(f.Op), f.Vals)
+  return json
 }
 
 func (f *LogicalFilter) MarshalJSON() ([]byte, error) {
-  // filter := f.toJson()
-  // bytes, err := filter.MarshalJSON()
-  // return bytes, err 
-  return nil, nil
+  filter := f.toJson()
+  bytes, err := filter.MarshalJSON()
+  return bytes, err 
 }
