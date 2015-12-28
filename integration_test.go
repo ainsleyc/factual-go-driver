@@ -120,14 +120,14 @@ func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
 	testGet(t, path, params)
 }
 
-// /t/places-us?geo={"$circle":{"$center":[34.06021,-118.41828],"$meters":5000}
+// /t/places-us?geo={"$circle":{"$center":[34.06021,-118.41828],"$meters":50}
 func TestGet_ReadWithGeoCircle_ShouldReturnResults(t *testing.T) {
 	path := "/t/places-us"
 	params := url.Values{}
 	geo, _ := factual.NewGeoCircle(
     float64(34.06021),
     float64(-118.41828),
-    5000,
+    50,
 	).MarshalJSON()
 	params.Set("geo", string(geo))
 
