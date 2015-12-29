@@ -32,35 +32,28 @@ func TestGeoCircle_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 	}
 }
 
-// func TestLogicalFilter_MarshalJson_ShouldReturnJsonString(t *testing.T) {
-// 	tests := []struct {
-// 		op       factual.LogicalOperator
-// 		vals     []factual.Filter
-// 		expected string
-// 	}{
-// 		{
-// 			factual.And,
-// 			[]factual.Filter{
-// 				factual.NewComparisonFilter(
-// 					"name",
-// 					factual.Eq,
-// 					"starbucks",
-// 				),
-// 				factual.NewComparisonFilter(
-// 					"locality",
-// 					factual.Eq,
-// 					"los angeles",
-// 				),
-// 			},
-// 			"{\"$and\":[{\"name\":{\"$eq\":\"starbucks\"}},{\"locality\":{\"$eq\":\"los angeles\"}}]}",
-// 		},
-// 	}
+func TestGeoRect_MarshalJson_ShouldReturnJsonString(t *testing.T) {
+	tests := []struct {
+		tlLat    float64
+		tlLong   float64
+		brLat    float64
+		brLong   float64
+		expected string
+	}{
+		{
+			float64(34.06110),
+			float64(-118.42283),
+			float64(34.05771),
+			float64(-118.41399),
+			"{\"$within\":{\"$rect\":[[34.0611,-118.42283],[34.05771,-118.41399]]}}",
+		},
+	}
 
-// 	for _, test := range tests {
-// 		filter := factual.NewLogicalFilter(test.op, test.vals)
-// 		bytes, _ := filter.MarshalJSON()
-// 		if string(bytes) != test.expected {
-// 			t.Error(string(bytes), "!=", test.expected)
-// 		}
-// 	}
-// }
+	for _, test := range tests {
+		geo := factual.NewGeoRect(test.tlLat, test.tlLong, test.brLat, test.brLong)
+		bytes, _ := geo.MarshalJSON()
+		if string(bytes) != test.expected {
+			t.Error(string(bytes), "!=", test.expected)
+		}
+	}
+}

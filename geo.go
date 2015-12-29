@@ -45,83 +45,31 @@ func (g *GeoCircle) MarshalJSON() ([]byte, error) {
 }
 
 type GeoRect struct {
+	TlLat  float64
+	TlLong float64
+	BrLat  float64
+	BrLong float64
 }
 
-// type LogicalOperator string
+func NewGeoRect(tlLat float64, tlLong float64,
+	brLat float64, brLong float64) *GeoRect {
+	return &GeoRect{tlLat, tlLong, brLat, brLong}
+}
 
-// const (
-// 	And LogicalOperator = "$and"
-// 	Or  LogicalOperator = "$or"
-// )
+func (g *GeoRect) toJson() *simplejson.Json {
+	coordinates := [][]float64{
+		[]float64{g.TlLat, g.TlLong},
+		[]float64{g.BrLat, g.BrLong},
+	}
+	opJson := simplejson.New()
+	opJson.Set(string(Rect), coordinates)
+	json := simplejson.New()
+	json.Set(string(Within), opJson)
+	return json
+}
 
-// type ComparisonOperator string
-
-// const (
-// 	Blank       ComparisonOperator = "$blank"
-// 	Bw          ComparisonOperator = "$bw"
-// 	Bwin        ComparisonOperator = "$bwin"
-// 	Eq          ComparisonOperator = "$eq"
-// 	Excludes    ComparisonOperator = "$excludes"
-// 	ExcludesAny ComparisonOperator = "$excludes_any"
-// 	Gt          ComparisonOperator = "$gt"
-// 	Gte         ComparisonOperator = "$gte"
-// 	Includes    ComparisonOperator = "$includes"
-// 	IncludesAny ComparisonOperator = "$includes_any"
-// 	Lt          ComparisonOperator = "$lt"
-// 	Lte         ComparisonOperator = "$lte"
-// 	Nbw         ComparisonOperator = "$nbw"
-// 	Nbwin       ComparisonOperator = "$bnwin"
-// 	Neq         ComparisonOperator = "$neq"
-// 	Nin         ComparisonOperator = "$nin"
-// 	Search      ComparisonOperator = "$search"
-// )
-
-// type Filter interface {
-// 	MarshalJSON() ([]byte, error)
-// 	toJson() *simplejson.Json
-// }
-
-// type ComparisonFilter struct {
-// 	Field string
-// 	Op    ComparisonOperator
-// 	Vals  interface{}
-// }
-
-// func NewComparisonFilter(field string, op ComparisonOperator, vals interface{}) *ComparisonFilter {
-// 	return &ComparisonFilter{field, op, vals}
-// }
-
-// func (f *ComparisonFilter) toJson() *simplejson.Json {
-// 	opJson := simplejson.New()
-// 	opJson.Set(string(f.Op), f.Vals)
-// 	json := simplejson.New()
-// 	json.Set(f.Field, opJson)
-// 	return json
-// }
-
-// func (f *ComparisonFilter) MarshalJSON() ([]byte, error) {
-// 	filter := f.toJson()
-// 	bytes, err := filter.MarshalJSON()
-// 	return bytes, err
-// }
-
-// type LogicalFilter struct {
-// 	Op   LogicalOperator
-// 	Vals []Filter
-// }
-
-// func NewLogicalFilter(op LogicalOperator, vals []Filter) *LogicalFilter {
-// 	return &LogicalFilter{op, vals}
-// }
-
-// func (f *LogicalFilter) toJson() *simplejson.Json {
-// 	json := simplejson.New()
-// 	json.Set(string(f.Op), f.Vals)
-// 	return json
-// }
-
-// func (f *LogicalFilter) MarshalJSON() ([]byte, error) {
-// 	filter := f.toJson()
-// 	bytes, err := filter.MarshalJSON()
-// 	return bytes, err
-// }
+func (g *GeoRect) MarshalJSON() ([]byte, error) {
+	filter := g.toJson()
+	bytes, err := filter.MarshalJSON()
+	return bytes, err
+}

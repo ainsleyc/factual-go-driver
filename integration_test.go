@@ -125,9 +125,24 @@ func TestGet_ReadWithGeoCircle_ShouldReturnResults(t *testing.T) {
 	path := "/t/places-us"
 	params := url.Values{}
 	geo, _ := factual.NewGeoCircle(
-    float64(34.06021),
-    float64(-118.41828),
-    50,
+		float64(34.06021),
+		float64(-118.41828),
+		50,
+	).MarshalJSON()
+	params.Set("geo", string(geo))
+
+	testGet(t, path, params)
+}
+
+// /t/places-us?geo="{"$within":{"$rect":[[34.0611,-118.42283],[34.05771,-118.41399]]}}
+func TestGet_ReadWithGeoRect_ShouldReturnResults(t *testing.T) {
+	path := "/t/places-us"
+	params := url.Values{}
+	geo, _ := factual.NewGeoRect(
+		float64(34.06110),
+		float64(-118.42283),
+		float64(34.05771),
+		float64(-118.41399),
 	).MarshalJSON()
 	params.Set("geo", string(geo))
 
