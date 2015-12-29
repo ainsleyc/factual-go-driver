@@ -4,6 +4,7 @@ package factual_test
 
 import (
 	"encoding/json"
+  "fmt"
 	"net/url"
 	"os"
 	"testing"
@@ -46,11 +47,14 @@ func testGet(t *testing.T, path string, params url.Values) {
 		t.Error("Get returned error for valid url, Factual API may be unavailable")
 	}
 
-	json, _ := simplejson.NewJson(resp)
-	data := json.Get("response").Get("data")
+	respJson, _ := simplejson.NewJson(resp)
+	data := respJson.Get("response").Get("data")
 	if len(data.MustArray()) <= 0 {
 		t.Error("Valid Get query returned no results")
-	}
+	} else {
+    paramStr, _ := json.Marshal(params)
+    fmt.Println("=== RESULTS:", len(data.MustArray()), "results for", path, string(paramStr))
+  }
 }
 
 // Test existence of valid config.json file
