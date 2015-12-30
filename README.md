@@ -12,7 +12,7 @@ import (
   
 // Initialization
 key := "Factual API key"
-secret := " Factual API secret"
+secret := "Factual API secret"
 client := factual.NewClient(key, secret)
     
 // Get request
