@@ -1,7 +1,6 @@
 package factual
 
 import (
-	// "net/http"
 	"github.com/garyburd/go-oauth/oauth"
 )
 
