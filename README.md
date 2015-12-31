@@ -29,7 +29,6 @@ data := respJson.Get("response").Get("data")
 ### Comparison Filters
 
 ```go
-path := "/t/places-us"
 params := url.Values{}
 filters, _ := factual.NewComparisonFilter(
   "name",
