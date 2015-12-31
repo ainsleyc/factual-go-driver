@@ -30,7 +30,7 @@ data := respJson.Get("response").Get("data")
 
 ```go
 params := url.Values{}
-filters, _ := factual.NewComparisonFilter(
+filters, err := factual.NewComparisonFilter(
   "name",
   factual.Eq,
   "starbucks",
