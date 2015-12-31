@@ -25,3 +25,16 @@ resp, err := client.Get(path, params)
 respJson, err := simplejson.NewJson(resp)
 data := respJson.Get("response").Get("data")
 ```
+
+### Comparison Filters
+
+```go
+path := "/t/places-us"
+params := url.Values{}
+filters, _ := factual.NewComparisonFilter(
+  "name",
+  factual.Eq,
+  "starbucks",
+).MarshalJSON()
+params.Set("filters", string(filters))
+```
