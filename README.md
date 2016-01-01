@@ -37,3 +37,24 @@ filters, err := factual.NewComparisonFilter(
 ).MarshalJSON()
 params.Set("filters", string(filters))
 ```
+
+### Comparison Filters
+
+```go
+params := url.Values{}
+filter1 := factual.NewComparisonFilter(
+  "name",
+  factual.Eq,
+  "starbucks",
+)
+filter2 := factual.NewComparisonFilter(
+  "locality",
+  factual.Eq,
+  "new york",
+)
+andFilter, _ := factual.NewLogicalFilter(
+  factual.And,
+  []factual.Filter{filter1, filter2},
+).MarshalJSON()
+params.Set("filters", string(andFilter))
+```
