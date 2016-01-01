@@ -38,7 +38,7 @@ filters, err := factual.NewComparisonFilter(
 params.Set("filters", string(filters))
 ```
 
-### Comparison Filters
+### Logical Filters
 
 ```go
 params := url.Values{}
