@@ -52,7 +52,7 @@ filter2 := factual.NewComparisonFilter(
   factual.Eq,
   "new york",
 )
-andFilter, _ := factual.NewLogicalFilter(
+andFilter, err := factual.NewLogicalFilter(
   factual.And,
   []factual.Filter{filter1, filter2},
 ).MarshalJSON()
