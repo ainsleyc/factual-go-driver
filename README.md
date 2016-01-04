@@ -70,3 +70,16 @@ geo, err := factual.NewGeoCircle(
 ).MarshalJSON()
 params.Set("geo", string(geo))
 ```
+
+### Geo Rectangle Filters
+
+```go
+params := url.Values{}
+geo, _ := factual.NewGeoRect(
+  float64(34.06110),
+  float64(-118.42283),
+  float64(34.05771),
+  float64(-118.41399),
+).MarshalJSON()
+params.Set("geo", string(geo))
+```
