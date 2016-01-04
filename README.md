@@ -58,3 +58,16 @@ andFilter, err := factual.NewLogicalFilter(
 ).MarshalJSON()
 params.Set("filters", string(andFilter))
 ```
+
+### Geo Circle Filters
+
+```go
+path := "/t/places-us"
+params := url.Values{}
+geo, err := factual.NewGeoCircle(
+  float64(34.06021),
+  float64(-118.41828),
+  50,
+).MarshalJSON()
+params.Set("geo", string(geo))
+```
