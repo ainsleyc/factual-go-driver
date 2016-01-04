@@ -75,7 +75,7 @@ params.Set("geo", string(geo))
 
 ```go
 params := url.Values{}
-geo, _ := factual.NewGeoRect(
+geo, err := factual.NewGeoRect(
   float64(34.06110),
   float64(-118.42283),
   float64(34.05771),
