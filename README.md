@@ -62,7 +62,6 @@ params.Set("filters", string(andFilter))
 ### Geo Circle Filters
 
 ```go
-path := "/t/places-us"
 params := url.Values{}
 geo, err := factual.NewGeoCircle(
   float64(34.06021),
