@@ -64,7 +64,7 @@ params.Set("filters", string(andFilter))
 ```go
 params := url.Values{}
 geo, err := factual.NewGeoCircle(
-  float64(34.06021), // Latitude
+  float64(34.06021),   // Latitude
   float64(-118.41828), // Longitude
   50, // Radius (m)
 ).MarshalJSON()
@@ -76,9 +76,9 @@ params.Set("geo", string(geo))
 ```go
 params := url.Values{}
 geo, err := factual.NewGeoRect(
-  float64(34.06110), // Upper left corner latitude
+  float64(34.06110),   // Upper left corner latitude
   float64(-118.42283), // Upper left corner longitude
-  float64(34.05771), // Bottom right corner latitude
+  float64(34.05771),   // Bottom right corner latitude
   float64(-118.41399), // Bottom right corner longitude
 ).MarshalJSON()
 params.Set("geo", string(geo))
