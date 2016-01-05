@@ -9,7 +9,11 @@ import (
 )
 
 func (c Client) Get(path string, params url.Values) ([]byte, error) {
+  body, err := c.getOauth(path, params)
+  return body, err
+}
 
+func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
 	fullUrl := c.BaseUri + path
 	if !govalidator.IsURL(fullUrl) {
 		return nil, ErrInvalidUrl(fullUrl)
