@@ -9,8 +9,14 @@ import (
 )
 
 func (c Client) Get(path string, params url.Values) ([]byte, error) {
-  body, err := c.getOauth(path, params)
-  return body, err
+
+  if params.Get("KEY") == "" {
+    body, err := c.getOauth(path, params)
+    return body, err
+  } else {
+    body, err := c.getWithKey(path, params)
+    return body, err
+  }
 }
 
 func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
@@ -35,4 +41,8 @@ func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
 	}
 
 	return body, nil
+}
+
+func (c Client) getWithKey(path string, params url.Values) ([]byte, error) {
+	return []byte{}, nil
 }
