@@ -44,5 +44,22 @@ func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
 }
 
 func (c Client) getWithKey(path string, params url.Values) ([]byte, error) {
-	return []byte{}, nil
+	fullUrl := c.BaseUri + path + "?" + params.Encode()
+
+  resp, err := http.Get(fullUrl)
+	if err != nil {
+		return nil, err
+	}
+  defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, ErrHttpBody(fullUrl)
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, ErrHttpResponse(fullUrl, resp.StatusCode, body)
+	}
+
+	return body, nil
 }
