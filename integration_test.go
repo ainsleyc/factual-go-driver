@@ -87,6 +87,17 @@ func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
 	testGet(t, path, params)
 }
 
+// /t/places-us?q=starbucks
+func TestGet_ReadWithKey_ShouldReturnResults(t *testing.T) {
+  config, _ := getTestConfig()
+	path := "/t/places-us"
+	params := url.Values{}
+	params.Set("q", "starbucks")
+	params.Set("KEY", config.Key)
+
+	testGet(t, path, params)
+}
+
 // /t/places-us?filters={"name":{"$eq":"starbucks"}}
 func TestGet_ReadWithSingleComparisonFilter_ShouldReturnResults(t *testing.T) {
 	path := "/t/places-us"
