@@ -66,7 +66,7 @@ params := url.Values{}
 geo, err := factual.NewGeoCircle(
   float64(34.06021),   // Latitude
   float64(-118.41828), // Longitude
-  50, // Radius (m)
+  50,                  // Radius (m)
 ).MarshalJSON()
 params.Set("geo", string(geo))
 ```
