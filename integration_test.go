@@ -163,3 +163,15 @@ func TestGet_ReadWithGeoRect_ShouldReturnResults(t *testing.T) {
 
 	testGet(t, path, params)
 }
+
+// /geotag?latitude=37.782137&longitude=-122.405803&KEY=key
+// func TestGet_Geotag_ShouldReturnResults(t *testing.T) {
+//   config, _ := getTestConfig()
+// 	path := "/geotag"
+// 	params := url.Values{}
+// 	params.Set("latitude", "37.782137")
+// 	params.Set("longitude", "-122.405803")
+// 	params.Set("KEY", config.Key)
+
+// 	testGet(t, path, params)
+// }

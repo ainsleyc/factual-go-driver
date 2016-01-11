@@ -9,7 +9,7 @@ type Client struct {
 	BaseUri string
 }
 
-const defaultUri = "http://api.v3.factual.com"
+const defaultUri = "https://api.factual.com"
 
 func NewClient(key string, secret string) Client {
 	creds := oauth.Credentials{key, secret}
