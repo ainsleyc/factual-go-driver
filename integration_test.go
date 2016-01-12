@@ -38,7 +38,7 @@ func getTestConfig() (conf testConfig, err error) {
 	return config, nil
 }
 
-func testGet(t *testing.T, path string, params url.Values) {
+func testRead(t *testing.T, path string, params url.Values) {
 	config, _ := getTestConfig()
 	client := factual.NewClient(config.Key, config.Secret)
 
@@ -84,7 +84,7 @@ func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
 	params := url.Values{}
 	params.Set("q", "starbucks")
 
-	testGet(t, path, params)
+	testRead(t, path, params)
 }
 
 // /t/places-us?q=starbucks
@@ -95,7 +95,7 @@ func TestGet_ReadWithKey_ShouldReturnResults(t *testing.T) {
 	params.Set("q", "starbucks")
 	params.Set("KEY", config.Key)
 
-	testGet(t, path, params)
+	testRead(t, path, params)
 }
 
 // /t/places-us?filters={"name":{"$eq":"starbucks"}}
@@ -109,7 +109,7 @@ func TestGet_ReadWithSingleComparisonFilter_ShouldReturnResults(t *testing.T) {
 	).MarshalJSON()
 	params.Set("filters", string(filters))
 
-	testGet(t, path, params)
+	testRead(t, path, params)
 }
 
 // /t/places-us?filters={"$and":[{"name":"starbucks"},{"locality":"new york"}]}
@@ -132,7 +132,7 @@ func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
 	).MarshalJSON()
 	params.Set("filters", string(andFilter))
 
-	testGet(t, path, params)
+	testRead(t, path, params)
 }
 
 // /t/places-us?geo={"$circle":{"$center":[34.06021,-118.41828],"$meters":50}
@@ -146,7 +146,7 @@ func TestGet_ReadWithGeoCircle_ShouldReturnResults(t *testing.T) {
 	).MarshalJSON()
 	params.Set("geo", string(geo))
 
-	testGet(t, path, params)
+	testRead(t, path, params)
 }
 
 // /t/places-us?geo="{"$within":{"$rect":[[34.0611,-118.42283],[34.05771,-118.41399]]}}
@@ -161,7 +161,7 @@ func TestGet_ReadWithGeoRect_ShouldReturnResults(t *testing.T) {
 	).MarshalJSON()
 	params.Set("geo", string(geo))
 
-	testGet(t, path, params)
+	testRead(t, path, params)
 }
 
 // /geotag?latitude=37.782137&longitude=-122.405803&KEY=key
@@ -173,5 +173,5 @@ func TestGet_ReadWithGeoRect_ShouldReturnResults(t *testing.T) {
 // 	params.Set("longitude", "-122.405803")
 // 	params.Set("KEY", config.Key)
 
-// 	testGet(t, path, params)
+// 	testGeotag(t, path, params)
 // }
