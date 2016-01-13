@@ -57,6 +57,25 @@ func testRead(t *testing.T, path string, params url.Values) {
   }
 }
 
+func testGeotag(t *testing.T, path string, params url.Values) {
+	config, _ := getTestConfig()
+	client := factual.NewClient(config.Key, config.Secret)
+
+	resp, err := client.Get(path, params)
+	if err != nil {
+		t.Error("Get returned error for valid url, Factual API may be unavailable")
+	}
+
+	respJson, _ := simplejson.NewJson(resp)
+	data := respJson.Get("response").Get("data")
+	if (data.Get("country") == nil) {
+		t.Error("Valid Get query returned no results")
+	} else {
+    paramStr, _ := json.Marshal(params)
+    fmt.Println("=== RESULTS:", data.MustMap(), "for", path, string(paramStr))
+  }
+}
+
 // Test existence of valid config.json file
 func TestGet_ConfigFile_ShouldExistAndBeValid(t *testing.T) {
 	config, err := getTestConfig()
@@ -165,13 +184,13 @@ func TestGet_ReadWithGeoRect_ShouldReturnResults(t *testing.T) {
 }
 
 // /geotag?latitude=37.782137&longitude=-122.405803&KEY=key
-// func TestGet_Geotag_ShouldReturnResults(t *testing.T) {
-//   config, _ := getTestConfig()
-// 	path := "/geotag"
-// 	params := url.Values{}
-// 	params.Set("latitude", "37.782137")
-// 	params.Set("longitude", "-122.405803")
-// 	params.Set("KEY", config.Key)
+func TestGet_Geotag_ShouldReturnResults(t *testing.T) {
+  config, _ := getTestConfig()
+	path := "/geotag"
+	params := url.Values{}
+	params.Set("latitude", "37.782137")
+	params.Set("longitude", "-122.405803")
+	params.Set("KEY", config.Key)
 
-// 	testGeotag(t, path, params)
-// }
+	testGeotag(t, path, params)
+}
