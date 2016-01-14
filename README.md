@@ -1,6 +1,6 @@
 # factual-go-driver
 
-### Usage (OAuth)
+### Get request using OAuth
 
 ```go
 import (
@@ -26,7 +26,7 @@ respJson, err := simplejson.NewJson(resp)
 data := respJson.Get("response").Get("data")
 ```
 
-### Usage (KEY parameter)
+### Get request using KEY parameter
 
 ```go
 path := "/geotag"
