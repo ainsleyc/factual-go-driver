@@ -1,6 +1,6 @@
 # factual-go-driver
 
-### Usage
+### Usage (OAuth)
 
 ```go
 import (
@@ -24,6 +24,20 @@ resp, err := client.Get(path, params)
 // Parse response
 respJson, err := simplejson.NewJson(resp)
 data := respJson.Get("response").Get("data")
+```
+
+### Usage (KEY parameter)
+
+```go
+path := "/geotag"
+params := url.Values{}
+params.Set("latitude", "37.782137")
+params.Set("longitude", "-122.405803")
+
+// Setting "KEY" parameter converts request to non-oauth
+params.Set("KEY", config.Key)
+
+resp, err := client.Get(path, params)
 ```
 
 ### Comparison Filters
