@@ -35,7 +35,7 @@ params.Set("latitude", "37.782137")
 params.Set("longitude", "-122.405803")
 
 // Setting "KEY" parameter converts request to non-oauth
-params.Set("KEY", config.Key)
+params.Set("KEY", "Factual API key")
 
 resp, err := client.Get(path, params)
 ```
