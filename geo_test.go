@@ -1,12 +1,6 @@
-// +build unit
+package factual
 
-package factual_test
-
-import (
-	"testing"
-
-	"github.com/ainsleyc/factual"
-)
+import "testing"
 
 func TestGeoCircle_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 	tests := []struct {
@@ -24,7 +18,7 @@ func TestGeoCircle_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		geo := factual.NewGeoCircle(test.lat, test.long, test.radius)
+		geo := NewGeoCircle(test.lat, test.long, test.radius)
 		bytes, _ := geo.MarshalJSON()
 		if string(bytes) != test.expected {
 			t.Error(string(bytes), "!=", test.expected)
@@ -50,7 +44,7 @@ func TestGeoRect_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		geo := factual.NewGeoRect(test.tlLat, test.tlLong, test.brLat, test.brLong)
+		geo := NewGeoRect(test.tlLat, test.tlLong, test.brLat, test.brLong)
 		bytes, _ := geo.MarshalJSON()
 		if string(bytes) != test.expected {
 			t.Error(string(bytes), "!=", test.expected)
