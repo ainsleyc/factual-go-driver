@@ -1,6 +1,7 @@
+// +build appengine
+
 package factual
 
-// +build appengine
 import (
 	"net/http"
 
