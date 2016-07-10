@@ -10,13 +10,13 @@ import (
 
 func (c Client) Get(path string, params url.Values) ([]byte, error) {
 
-  if params.Get("KEY") == "" {
-    body, err := c.getOauth(path, params)
-    return body, err
-  } else {
-    body, err := c.getWithKey(path, params)
-    return body, err
-  }
+	if params.Get("KEY") == "" {
+		body, err := c.getOauth(path, params)
+		return body, err
+	}
+
+	body, err := c.getWithKey(path, params)
+	return body, err
 }
 
 func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
@@ -25,7 +25,12 @@ func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
 		return nil, ErrInvalidUrl(fullUrl)
 	}
 
-	resp, err := c.Oauth.Get(http.DefaultClient, nil, fullUrl, params)
+	httpClient := http.DefaultClient
+	if getClient != nil {
+		httpClient = getClient(c.ctx)
+	}
+
+	resp, err := c.Oauth.Get(httpClient, nil, fullUrl, params)
 	if err != nil {
 		return nil, err
 	}
@@ -46,11 +51,11 @@ func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
 func (c Client) getWithKey(path string, params url.Values) ([]byte, error) {
 	fullUrl := c.BaseUri + path + "?" + params.Encode()
 
-  resp, err := http.Get(fullUrl)
+	resp, err := http.Get(fullUrl)
 	if err != nil {
 		return nil, err
 	}
-  defer resp.Body.Close()
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

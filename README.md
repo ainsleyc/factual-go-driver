@@ -5,22 +5,22 @@
 ```go
 import (
   "net/url"
-  
+
   "github.com/ainsleyc/factual"
   "github.com/bitly/go-simplejson"
 )
-  
+
 // Initialization
 key := "Factual API key"
 secret := "Factual API secret"
 client := factual.NewClient(key, secret)
-    
+
 // Get request
 path := "/t/places-us"
 params := url.Values{}
 params.Set("q": "starbucks")
 resp, err := client.Get(path, params)
-    
+
 // Parse response
 respJson, err := simplejson.NewJson(resp)
 data := respJson.Get("response").Get("data")
@@ -96,4 +96,52 @@ geo, err := factual.NewGeoRect(
   float64(-118.41399), // Bottom right corner longitude
 ).MarshalJSON()
 params.Set("geo", string(geo))
+```
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"net/url"
+)
+
+func main() {
+	http.HandleFunc("/auto", auto)
+	log.Fatal(http.ListenAndServe(":12345", nil))
+}
+
+func auto(w http.ResponseWriter, r *http.Request) {
+
+	path := "/t/places-us"
+	params := url.Values{}
+	q := "ba"
+
+	cmpFilter := driver.NewComparisonFilter(
+		"name",
+		driver.Bw,
+		q,
+	)
+
+	bs, err := json.Marshal(cmpFilter)
+	if err != nil {
+		return httputils.NewServerErr(err)
+	}
+
+	params.Set("filters", string(bs))
+
+	wc := driver.WithRequest(r)
+	client := driver.NewClient(key, secret, wc)
+
+	bs, err = client.Get(path, params)
+	if err != nil {
+		return httputils.NewServerErr(err)
+	}
+
+	w.Write(bs)
+	w.WriteHeader(200)
+}
+
 ```
