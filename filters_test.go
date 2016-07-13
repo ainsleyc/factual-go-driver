@@ -1,25 +1,19 @@
-// +build unit
+package factual
 
-package factual_test
-
-import (
-	"testing"
-
-	"github.com/ainsleyc/factual"
-)
+import "testing"
 
 func TestComparisonFilter_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 	tests := []struct {
 		field    string
-		op       factual.ComparisonOperator
+		op       ComparisonOperator
 		vals     interface{}
 		expected string
 	}{
-		{"name", factual.Eq, "Factual", "{\"name\":{\"$eq\":\"Factual\"}}"},
+		{"name", Eq, "Factual", "{\"name\":{\"$eq\":\"Factual\"}}"},
 	}
 
 	for _, test := range tests {
-		filter := factual.NewComparisonFilter(test.field, test.op, test.vals)
+		filter := NewComparisonFilter(test.field, test.op, test.vals)
 		bytes, _ := filter.MarshalJSON()
 		if string(bytes) != test.expected {
 			t.Error(string(bytes), "!=", test.expected)
@@ -29,21 +23,21 @@ func TestComparisonFilter_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 
 func TestLogicalFilter_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 	tests := []struct {
-		op       factual.LogicalOperator
-		vals     []factual.Filter
+		op       LogicalOperator
+		vals     []Filter
 		expected string
 	}{
 		{
-			factual.And,
-			[]factual.Filter{
-				factual.NewComparisonFilter(
+			And,
+			[]Filter{
+				NewComparisonFilter(
 					"name",
-					factual.Eq,
+					Eq,
 					"starbucks",
 				),
-				factual.NewComparisonFilter(
+				NewComparisonFilter(
 					"locality",
-					factual.Eq,
+					Eq,
 					"los angeles",
 				),
 			},
@@ -52,7 +46,7 @@ func TestLogicalFilter_MarshalJson_ShouldReturnJsonString(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		filter := factual.NewLogicalFilter(test.op, test.vals)
+		filter := NewLogicalFilter(test.op, test.vals)
 		bytes, _ := filter.MarshalJSON()
 		if string(bytes) != test.expected {
 			t.Error(string(bytes), "!=", test.expected)

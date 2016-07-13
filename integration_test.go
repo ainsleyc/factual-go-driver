@@ -1,15 +1,14 @@
 // +build integration
 
-package factual_test
+package factual
 
 import (
 	"encoding/json"
-  "fmt"
+	"fmt"
 	"net/url"
 	"os"
 	"testing"
 
-	"github.com/ainsleyc/factual"
 	"github.com/bitly/go-simplejson"
 )
 
@@ -17,30 +16,12 @@ const testValidPath = "/t/place-categories"
 
 var testEmptyParams = url.Values{}
 
-type testConfig struct {
-	Key    string
-	Secret string
-}
-
-func getTestConfig() (conf testConfig, err error) {
-	config := testConfig{}
-	file, err := os.Open("conf.json")
-	if err != nil {
-		return config, err
-	}
-
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&config)
-	if err != nil {
-		return config, err
-	}
-
-	return config, nil
-}
-
 func testRead(t *testing.T, path string, params url.Values) {
-	config, _ := getTestConfig()
-	client := factual.NewClient(config.Key, config.Secret)
+	config, err := getTestConfig()
+	if err != nil {
+		t.Fatalf("failed to load factual key/secret from config.json: %s", err)
+	}
+	client := NewClient(config.Key, config.Secret)
 
 	resp, err := client.Get(path, params)
 	if err != nil {
@@ -52,14 +33,20 @@ func testRead(t *testing.T, path string, params url.Values) {
 	if len(data.MustArray()) <= 0 {
 		t.Error("Valid Get query returned no results")
 	} else {
-    paramStr, _ := json.Marshal(params)
-    fmt.Println("=== RESULTS:", len(data.MustArray()), "results for", path, string(paramStr))
-  }
+		paramStr, _ := json.Marshal(params)
+		fmt.Println("=== RESULTS:", len(data.MustArray()), "results for", path, string(paramStr))
+	}
+}
+
+func TestGetClient_ShouldBeNull(t *testing.T) {
+	if getClient != nil {
+		t.Fatalf("appengine code active in non-appengine environment")
+	}
 }
 
 func testGeotag(t *testing.T, path string, params url.Values) {
 	config, _ := getTestConfig()
-	client := factual.NewClient(config.Key, config.Secret)
+	client := NewClient(config.Key, config.Secret)
 
 	resp, err := client.Get(path, params)
 	if err != nil {
@@ -68,12 +55,12 @@ func testGeotag(t *testing.T, path string, params url.Values) {
 
 	respJson, _ := simplejson.NewJson(resp)
 	data := respJson.Get("response").Get("data")
-	if (data.Get("country") == nil) {
+	if data.Get("country") == nil {
 		t.Error("Valid Get query returned no results")
 	} else {
-    paramStr, _ := json.Marshal(params)
-    fmt.Println("=== RESULTS:", data.MustMap(), "for", path, string(paramStr))
-  }
+		paramStr, _ := json.Marshal(params)
+		fmt.Println("=== RESULTS:", data.MustMap(), "for", path, string(paramStr))
+	}
 }
 
 // Test existence of valid config.json file
@@ -108,7 +95,7 @@ func TestGet_ReadWithQuery_ShouldReturnResults(t *testing.T) {
 
 // /t/places-us?q=starbucks
 func TestGet_ReadWithKey_ShouldReturnResults(t *testing.T) {
-  config, _ := getTestConfig()
+	config, _ := getTestConfig()
 	path := "/t/places-us"
 	params := url.Values{}
 	params.Set("q", "starbucks")
@@ -121,9 +108,9 @@ func TestGet_ReadWithKey_ShouldReturnResults(t *testing.T) {
 func TestGet_ReadWithSingleComparisonFilter_ShouldReturnResults(t *testing.T) {
 	path := "/t/places-us"
 	params := url.Values{}
-	filters, _ := factual.NewComparisonFilter(
+	filters, _ := NewComparisonFilter(
 		"name",
-		factual.Eq,
+		Eq,
 		"starbucks",
 	).MarshalJSON()
 	params.Set("filters", string(filters))
@@ -135,19 +122,19 @@ func TestGet_ReadWithSingleComparisonFilter_ShouldReturnResults(t *testing.T) {
 func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
 	path := "/t/places-us"
 	params := url.Values{}
-	filter1 := factual.NewComparisonFilter(
+	filter1 := NewComparisonFilter(
 		"name",
-		factual.Eq,
+		Eq,
 		"starbucks",
 	)
-	filter2 := factual.NewComparisonFilter(
+	filter2 := NewComparisonFilter(
 		"locality",
-		factual.Eq,
+		Eq,
 		"new york",
 	)
-	andFilter, _ := factual.NewLogicalFilter(
-		factual.And,
-		[]factual.Filter{filter1, filter2},
+	andFilter, _ := NewLogicalFilter(
+		And,
+		[]Filter{filter1, filter2},
 	).MarshalJSON()
 	params.Set("filters", string(andFilter))
 
@@ -158,7 +145,7 @@ func TestGet_ReadWithLogicalFilter_ShouldReturnResults(t *testing.T) {
 func TestGet_ReadWithGeoCircle_ShouldReturnResults(t *testing.T) {
 	path := "/t/places-us"
 	params := url.Values{}
-	geo, _ := factual.NewGeoCircle(
+	geo, _ := NewGeoCircle(
 		float64(34.06021),
 		float64(-118.41828),
 		50,
@@ -172,7 +159,7 @@ func TestGet_ReadWithGeoCircle_ShouldReturnResults(t *testing.T) {
 func TestGet_ReadWithGeoRect_ShouldReturnResults(t *testing.T) {
 	path := "/t/places-us"
 	params := url.Values{}
-	geo, _ := factual.NewGeoRect(
+	geo, _ := NewGeoRect(
 		float64(34.06110),
 		float64(-118.42283),
 		float64(34.05771),
@@ -185,7 +172,7 @@ func TestGet_ReadWithGeoRect_ShouldReturnResults(t *testing.T) {
 
 // /geotag?latitude=37.782137&longitude=-122.405803&KEY=key
 func TestGet_Geotag_ShouldReturnResults(t *testing.T) {
-  config, _ := getTestConfig()
+	config, _ := getTestConfig()
 	path := "/geotag"
 	params := url.Values{}
 	params.Set("latitude", "37.782137")

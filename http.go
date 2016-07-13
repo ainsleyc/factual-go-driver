@@ -1,6 +1,7 @@
 package factual
 
 import (
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -27,6 +28,9 @@ func (c Client) getOauth(path string, params url.Values) ([]byte, error) {
 
 	httpClient := http.DefaultClient
 	if getClient != nil {
+		if c.ctx == nil {
+			return nil, errors.New("Appengine requires a context to be passed")
+		}
 		httpClient = getClient(c.ctx)
 	}
 
